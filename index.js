@@ -1,0 +1,426 @@
+import { useState } from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePlaidLink } from 'react-plaid-link';
+
+export default function Home() {
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+
+  const config = {
+    token: 'link-sandbox-token',
+    onSuccess: (public_token, metadata) => {
+      console.log('Success', public_token, metadata);
+    },
+    onExit: (err, metadata) => {
+      console.log('Exit', err, metadata);
+    }
+  };
+
+  const { open, ready } = usePlaidLink(config);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    console.log('Login with:', email, password);
+    setShowLogin(false);
+  };
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    console.log('Signup with:', name, email, password);
+    setShowSignup(false);
+  };
+
+  const handleConnectBank = () => {
+    open();
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Head>
+        <title>BudgetMap - Map your budget with AI</title>
+        <meta name="description" content="BudgetMap - AI-powered budget planning and management tool" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="/styles/main.css" />
+        <script src="/scripts/main.js" defer></script>
+      </Head>
+
+      <header className="bg-white shadow-md">
+        <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center space-x-2">
+              <Image src="/logo.svg" alt="BudgetMap Logo" width={40} height={40} />
+              <span className="text-xl font-bold text-blue-600">BudgetMap</span>
+            </Link>
+          </div>
+
+          <div className="md:hidden">
+            <button id="mobileMenuToggle" className="text-gray-700 focus:outline-none">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="hidden md:flex space-x-8">
+            <Link href="/" className="text-blue-600 font-medium">Home</Link>
+            <Link href="/dashboard" className="text-gray-600 hover:text-blue-600">Dashboard</Link>
+            <Link href="/chat" className="text-gray-600 hover:text-blue-600">AI Assistant</Link>
+            <Link href="/about" className="text-gray-600 hover:text-blue-600">About</Link>
+            <Link href="/contact" className="text-gray-600 hover:text-blue-600">Contact</Link>
+          </div>
+
+          <div className="hidden md:flex items-center space-x-4">
+            <button 
+              onClick={() => setShowLogin(true)} 
+              className="text-blue-600 hover:text-blue-800 font-medium"
+            >
+              Log in
+            </button>
+            <button 
+              onClick={() => setShowSignup(true)} 
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+            >
+              Sign up
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <main className="flex-grow">
+        <section className="bg-gradient-to-r from-blue-50 to-indigo-50 py-20">
+          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div className="md:w-1/2 mb-12 md:mb-0">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Take control of your finances with AI
+              </h1>
+              <h2 className="text-xl md:text-2xl text-gray-600 mb-8">
+                BudgetMap helps you track expenses, set goals, and make smarter financial decisions with AI-powered insights.
+              </h2>
+              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                <button 
+                  onClick={() => setShowSignup(true)} 
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors text-lg"
+                >
+                  Get Started Free
+                </button>
+                <button 
+                  onClick={handleConnectBank} 
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors text-lg"
+                >
+                  Connect Bank Account
+                </button>
+              </div>
+            </div>
+            <div className="md:w-1/2">
+              <Image 
+                src="/dashboard-preview.svg" 
+                alt="BudgetMap Dashboard Preview" 
+                width={600} 
+                height={400} 
+                className="rounded-lg shadow-xl"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">Why choose BudgetMap?</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+                <div className="text-blue-600 mb-4">
+                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Automated Tracking</h3>
+                <p className="text-gray-600">
+                  Connect your bank accounts securely with Plaid and automatically categorize your transactions.
+                </p>
+              </div>
+              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+                <div className="text-blue-600 mb-4">
+                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">AI-Powered Insights</h3>
+                <p className="text-gray-600">
+                  Get personalized recommendations to save money and reach your financial goals faster.
+                </p>
+              </div>
+              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+                <div className="text-blue-600 mb-4">
+                  <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Budget Planning</h3>
+                <p className="text-gray-600">
+                  Create custom budgets and track your progress with intuitive visualizations and projections.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-12">What our users say</h2>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="bg-blue-100 rounded-full p-2 mr-4">
+                    <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Sarah Johnson</h4>
+                    <p className="text-gray-500 text-sm">Freelance Designer</p>
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  "BudgetMap has completely transformed how I manage my irregular income. The AI suggestions have helped me save an extra $300 each month!"
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="flex items-center mb-4">
+                  <div className="bg-blue-100 rounded-full p-2 mr-4">
+                    <svg className="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold">Michael Chen</h4>
+                    <p className="text-gray-500 text-sm">Software Engineer</p>
+                  </div>
+                </div>
+                <p className="text-gray-600">
+                  "The bank connection was seamless, and I love how the app automatically categorizes my transactions. It's saved me hours of manual work each month."
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 bg-blue-600 text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-3xl font-bold mb-6">Ready to take control of your finances?</h2>
+            <p className="text-xl mb-8 max-w-2xl mx-auto">
+              Join thousands of users who are saving more and stressing less with BudgetMap.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <button 
+                onClick={() => setShowSignup(true)} 
+                className="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition-colors text-lg"
+              >
+                Create Free Account
+              </button>
+              <Link href="/about" className="border border-white hover:bg-blue-700 px-6 py-3 rounded-lg font-medium transition-colors text-lg">
+                Learn More
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="bg-gray-800 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">BudgetMap</h3>
+              <p className="text-gray-300">
+                Your AI-powered financial companion for smarter budgeting and planning.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Product</h4>
+              <ul className="space-y-2">
+                <li><Link href="/features" className="text-gray-300 hover:text-white">Features</Link></li>
+                <li><Link href="/pricing" className="text-gray-300 hover:text-white">Pricing</Link></li>
+                <li><Link href="/security" className="text-gray-300 hover:text-white">Security</Link></li>
+                <li><Link href="/api" className="text-gray-300 hover:text-white">API</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2">
+                <li><Link href="/blog" className="text-gray-300 hover:text-white">Blog</Link></li>
+                <li><Link href="/guides" className="text-gray-300 hover:text-white">Guides</Link></li>
+                <li><Link href="/help" className="text-gray-300 hover:text-white">Help Center</Link></li>
+                <li><Link href="/community" className="text-gray-300 hover:text-white">Community</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-2">
+                <li><Link href="/about" className="text-gray-300 hover:text-white">About Us</Link></li>
+                <li><Link href="/careers" className="text-gray-300 hover:text-white">Careers</Link></li>
+                <li><Link href="/contact" className="text-gray-300 hover:text-white">Contact</Link></li>
+                <li><Link href="/privacy" className="text-gray-300 hover:text-white">Privacy Policy</Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-700 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; 2025 BudgetMap. All rights reserved.</p>
+            <div className="flex space-x-4 mt-4 md:mt-0">
+              <a href="#" className="text-gray-300 hover:text-white">
+                <span className="sr-only">Twitter</span>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                </svg>
+              </a>
+              <a href="#" className="text-gray-300 hover:text-white">
+                <span className="sr-only">LinkedIn</span>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+              </a>
+              <a href="#" className="text-gray-300 hover:text-white">
+                <span className="sr-only">GitHub</span>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {showLogin && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold">Log in to your account</h3>
+              <button onClick={() => setShowLogin(false)} className="text-gray-500 hover:text-gray-700">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <form onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label htmlFor="password" className="block text-gray-700 font-medium mb-2">Password</label>
+                <input 
+                  type="password" 
+                  id="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors"
+              >
+                Log in
+              </button>
+            </form>
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">
+                Don't have an account?{' '}
+                <button 
+                  onClick={() => {
+                    setShowLogin(false);
+                    setShowSignup(true);
+                  }}
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  Sign up
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSignup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-bold">Create your account</h3>
+              <button onClick={() => setShowSignup(false)} className="text-gray-500 hover:text-gray-700">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <form onSubmit={handleSignup}>
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Full Name</label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="signup-email" className="block text-gray-700 font-medium mb-2">Email</label>
+                <input 
+                  type="email" 
+                  id="signup-email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label htmlFor="signup-password" className="block text-gray-700 font-medium mb-2">Password</label>
+                <input 
+                  type="password" 
+                  id="signup-password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </div>
+              <button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors"
+              >
+                Sign up
+              </button>
+            </form>
+            <div className="mt-6 text-center">
+              <p className="text-gray-600">
+                Already have an account?{' '}
+                <button 
+                  onClick={() => {
+                    setShowSignup(false);
+                    setShowLogin(true);
+                  }}
+                  className="text-blue-600 hover:text-blue-800 font-medium"
+                >
+                  Log in
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
